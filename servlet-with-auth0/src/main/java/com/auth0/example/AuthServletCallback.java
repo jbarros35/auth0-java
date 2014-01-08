@@ -17,7 +17,7 @@ public class AuthServletCallback extends AbstractAuthorizationCodeCallbackServle
     @Override
     protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential)
             throws ServletException, IOException {
-        resp.addCookie(new Cookie());
+        ///resp.addCookie(new Cookie());
         resp.sendRedirect("/hello");
     }
 
