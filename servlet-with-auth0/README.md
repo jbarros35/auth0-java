@@ -1,8 +1,8 @@
-## Providing Authentication using Auth0 to Servlets
+## Using Auth0 with Servlets Example
 
 ### Prerequisites
 
-In order to follow this tutorial you will need to have Maven installed. You can install Maven with [brew](http://brew.sh/):
+In order to run this example you will need to have Maven installed. You can install Maven with [brew](http://brew.sh/):
 
 ```sh
 brew install maven
@@ -19,6 +19,10 @@ In order to build and run the project you must execute:
 ```sh
 mvn clean install org.mortbay.jetty:jetty-maven-plugin:run
 ```
+
+Then, go to http://localhost:8080/login.
+
+Happy hacking!
 
 ---
  
