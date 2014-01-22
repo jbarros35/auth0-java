@@ -1,5 +1,10 @@
 package com.auth0.example;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.codec.binary.Base64;
+
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Map;
 
@@ -10,9 +15,18 @@ public class AuthRequestWrapper extends HttpServletRequestWrapper {
     Map<String, String> user;
     HttpServletRequest realRequest;
 
-    public AuthRequestWrapper(Map<String, String> user, HttpServletRequest request) {
+    public AuthRequestWrapper(String idToken, HttpServletRequest request) throws IOException {
         super(request);
-        this.user = user;
+
+        String[] split = idToken.split("\\.");
+
+        if (split.length != 3) {
+            throw new RuntimeException("split should have three parts");
+        }
+
+        String userInfoJson = new String(Base64.decodeBase64(split[1]));
+        ObjectMapper mapper = new ObjectMapper();
+        this.user = mapper.readValue(userInfoJson, Map.class);
         this.realRequest = request;
     }
 

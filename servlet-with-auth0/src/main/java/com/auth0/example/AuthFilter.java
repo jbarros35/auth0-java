@@ -36,17 +36,7 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        String[] split = idToken.split("\\.");
-
-        if (split.length != 3) {
-            throw new RuntimeException("split should have three parts");
-        }
-
-        String userInfoJson = new String(Base64.decodeBase64(split[1]));
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> userInfoMap = mapper.readValue(userInfoJson, Map.class);
-
-        next.doFilter(new AuthRequestWrapper(userInfoMap, request), response);
+        next.doFilter(new AuthRequestWrapper(idToken, request), response);
     }
 
     @Override
