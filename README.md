@@ -1,4 +1,10 @@
-# Tutorial
+# Auth0 and Java
+
+These Java examples will help you implement server-side (API) authentication. You can use it together with [Auth0](https://www.auth0.com) to add username/password authentication, support for enterprise identity like Active Directory or SAML and also for social identities like Google, Facebook or Salesforce among others to your web, API and mobile native apps. 
+
+
+[Auth0](https://www.auth0.com) is a cloud service that provides a turn-key solution for authentication, authorization and Single Sign On.
+
 
 ## Servlet-based Application
 
