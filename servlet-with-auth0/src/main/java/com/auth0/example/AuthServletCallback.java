@@ -50,25 +50,39 @@ public class AuthServletCallback extends HttpServlet {
         return https;
     }
 
+    private String getAuthorizationCode(HttpServletRequest req) {
+        String authorizationCode = null;
+        List<NameValuePair> queryString = URLEncodedUtils.parse(req.getQueryString(), Charset.forName("ASCII"));
+
+        for (NameValuePair pair : queryString) {
+            if ("code".equals(pair.getName())) {
+                authorizationCode = pair.getValue();
+            }
+        }
+        return authorizationCode;
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // Parse request to fetch authorization code
         String authorizationCode = getAuthorizationCode(req);
 
         Properties properties = new Properties();
         properties.load(getServletContext().getResourceAsStream("/WEB-INF/auth.properties"));
 
+        URI accessTokenURI = getURI(properties);
+
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
-        URI https = getURI(properties);
-
-        HttpPost httpPost = new HttpPost(https);
+        HttpPost httpPost = new HttpPost(accessTokenURI);
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("client_id", (String) properties.get("auth.client_id")));
-        nameValuePairs.add(new BasicNameValuePair("redirect_uri", (String) properties.get("auth.redirect_uri")));
-        nameValuePairs.add(new BasicNameValuePair("client_secret", (String) properties.get("auth.client_secret")));
-        nameValuePairs.add(new BasicNameValuePair("code", authorizationCode));
-        nameValuePairs.add(new BasicNameValuePair("grant_type", "authorization_code"));
-        nameValuePairs.add(new BasicNameValuePair("scope", "openid"));
+        nameValuePairs.add(new BasicNameValuePair("client_id",      (String) properties.get("auth.client_id")));
+        nameValuePairs.add(new BasicNameValuePair("redirect_uri",   (String) properties.get("auth.redirect_uri")));
+        nameValuePairs.add(new BasicNameValuePair("client_secret",  (String) properties.get("auth.client_secret")));
+        nameValuePairs.add(new BasicNameValuePair("code",           authorizationCode));
+        nameValuePairs.add(new BasicNameValuePair("grant_type",     "authorization_code"));
+        nameValuePairs.add(new BasicNameValuePair("scope",          "openid"));
+
         httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         CloseableHttpResponse response = httpClient.execute(httpPost);
 
@@ -82,21 +96,10 @@ public class AuthServletCallback extends HttpServlet {
             response.close();
         }
 
+        // Parse and obtain both access token and id token and save them in a persistent session
         parseTokensAndSaveToSession(tokensToParse, req.getSession());
+
+        // Redirect user to home
         resp.sendRedirect("/hello");
     }
-
-    private String getAuthorizationCode(HttpServletRequest req) {
-        String authorizationCode = null;
-        List<NameValuePair> queryString = URLEncodedUtils.parse(req.getQueryString(), Charset.forName("ASCII"));
-
-        for (NameValuePair pair : queryString) {
-            if ("code".equals(pair.getName())) {
-                authorizationCode = pair.getValue();
-            }
-        }
-        return authorizationCode;
-    }
-
-
 }
