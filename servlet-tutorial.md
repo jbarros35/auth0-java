@@ -91,9 +91,22 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 
 ```
 
+A possible implementation of `parseTokensAndSaveToSession` using [Jackson](http://jackson.codehaus.org/), a JSON parsing library, will look like this:
+
+```js
+private void parseTokensAndSaveToSession(String body, HttpSession session) throws IOException {
+    ObjectMapper mapper = new ObjectMapper();
+    Map<String, String> jsonAsMap = mapper.readValue(body, Map.class);
+    String accessToken = jsonAsMap.get("access_token");
+    String idToken = jsonAsMap.get("id_token");
+
+    session.setAttribute("accessToken", accessToken);
+    session.setAttribute("idToken", idToken);
+}
+```
+
 
 ### Login Page
-
 
 If your Application has an HTML frontend you will need to add the [Auth0 Widget](https://docs.auth0.com/login-widget2) to your login jsp.
 
