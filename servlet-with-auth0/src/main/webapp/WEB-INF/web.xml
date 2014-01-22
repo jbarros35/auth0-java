@@ -5,28 +5,45 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         version="2.5">
     <display-name>Auth0 Servlet Example</display-name>
+    <!-- Servlets -->
     <servlet>
         <servlet-name>Hello</servlet-name>
         <servlet-class>com.auth0.example.HelloServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Auth</servlet-name>
-        <servlet-class>com.auth0.example.AuthServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>AuthCallback</servlet-name>
         <servlet-class>com.auth0.example.AuthServletCallback</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <jsp-file>/login.jsp</jsp-file>
+    </servlet>
+
+    <!-- Servlet Mappings -->
     <servlet-mapping>
         <servlet-name>Hello</servlet-name>
         <url-pattern>/hello/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Auth</servlet-name>
-        <url-pattern>/auth/*</url-pattern>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AuthCallback</servlet-name>
         <url-pattern>/oauth2callback/*</url-pattern>
     </servlet-mapping>
+
+    <!-- Filters -->
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.auth0.example.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/hello/*</url-pattern>
+    </filter-mapping>
 </web-app>
