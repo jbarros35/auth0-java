@@ -1,4 +1,4 @@
-# Introduction
+# Tutorial
 
 ## Servlet-based Application
 
