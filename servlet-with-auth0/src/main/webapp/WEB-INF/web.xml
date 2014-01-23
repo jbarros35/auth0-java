@@ -11,12 +11,12 @@
         <servlet-class>com.auth0.example.HelloServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AuthCallback</servlet-name>
-        <servlet-class>com.auth0.example.AuthServletCallback</servlet-class>
+        <servlet-name>RedirectCallback</servlet-name>
+        <servlet-class>com.auth0.Auth0ServletCallback</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Login</servlet-name>
-        <jsp-file>/login.jsp</jsp-file>
+        <servlet-class>com.auth0.Auth0LoginServlet</servlet-class>
     </servlet>
 
     <!-- Servlet Mappings -->
@@ -33,17 +33,45 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>AuthCallback</servlet-name>
+        <servlet-name>RedirectCallback</servlet-name>
         <url-pattern>/oauth2callback/*</url-pattern>
     </servlet-mapping>
 
     <!-- Filters -->
     <filter>
         <filter-name>AuthFilter</filter-name>
-        <filter-class>com.auth0.example.AuthFilter</filter-class>
+        <filter-class>com.auth0.Auth0Filter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/hello/*</url-pattern>
     </filter-mapping>
+
+    <!-- Auth0 Configuration -->
+    <context-param>
+        <param-name>auth0.client_id</param-name>
+        <param-value>YOUR_CLIENT_ID</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>auth0.client_secret</param-name>
+        <param-value>YOUR_CLIENT_SECRET</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>auth0.redirect_uri</param-name>
+        <param-value>http://localhost/your_redirect_uri</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>auth0.domain</param-name>
+        <param-value>your-domain.auth0.com</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>auth0.redirect_after</param-name>
+        <param-value>/home</param-value>
+    </context-param>
+
+
 </web-app>

@@ -1,4 +1,4 @@
-package com.auth0.example;
+package com.auth0;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
@@ -17,16 +17,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
-public class AuthServletCallback extends HttpServlet {
+public class Auth0ServletCallback extends HttpServlet {
+
+    private Properties properties = new Properties();
 
     private void parseTokensAndSaveToSession(String body, HttpSession session) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -38,11 +37,10 @@ public class AuthServletCallback extends HttpServlet {
         session.setAttribute("idToken", idToken);
     }
 
-
     private URI getURI(Properties properties) {
         URI https;
         try {
-            https = new URI("https", (String) properties.get("auth.domain"), "/oauth/token", "");
+            https = new URI("https", (String) properties.get("auth0.domain"), "/oauth/token", "");
 
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
@@ -62,13 +60,71 @@ public class AuthServletCallback extends HttpServlet {
         return authorizationCode;
     }
 
+    /**
+     * Fetch properties to be used. User is encourage to override this method.
+     *
+     * Auth0 uses the ServletContext parameters:
+     *
+     * <dl>
+     *     <dt>auth0.client_id</dd><dd>Application client id</dd>
+     *     <dt>auth0.client_secret</dt><dd>Application client secret</dd>
+     *     <dt>auth0.redirect_uri</dt><dd>OAuth2 URI to redirect the user with Authorization Code.
+     *     In most cases, this will be the route to com.auth0.Auth0ServletCallback servlet (or your subclass of it).
+     *     For instance, if your servlet will be routed to /callback and you will be listening on
+     *     localhost port 8080 it should be http://localhost:8080/callback</dd>
+     *     <dt>auth0.domain</dt><dd>Auth0 domain</dd>
+     *     <dt>auth0.redirect_after</dt><dd>Where to send the user after successful login.</dd>
+     * </dl>
+     */
+    @Override
+    public void init() throws ServletException {
+        Map<String, Boolean> requiredParametersChecklist = new HashMap<String, Boolean>();
+        StringBuilder missingParameters = new StringBuilder();
+        String [] requiredParametersName = {
+                "auth0.client_id", "auth0.client_secret", "auth0.redirect_uri",
+                "auth0.domain", "auth0.redirect_after"};
+
+
+        for (String requiredParameterName : requiredParametersName) {
+            requiredParametersChecklist.put(requiredParameterName, false);
+        }
+
+        Enumeration initParameterNames = getServletContext().getInitParameterNames();
+        while (initParameterNames.hasMoreElements()) {
+            String key = (String) initParameterNames.nextElement();
+            String value = getServletContext().getInitParameter(key);
+
+            properties.put(key, value);
+
+            requiredParametersChecklist.put(key, true);
+        }
+
+        for (Map.Entry<String, Boolean> entry : requiredParametersChecklist.entrySet()) {
+            String key = entry.getKey();
+            Boolean value = entry.getValue();
+            if (!value) {
+                if (missingParameters.length() == 0) {
+                    missingParameters.append("Error: The following required ServletContext parameters where not found: ");
+                }
+                missingParameters.append(key);
+                missingParameters.append(", ");
+            }
+        }
+
+
+        if (missingParameters.length() > 0) {
+            // Removing last ", "
+            missingParameters.setLength(missingParameters.length() - 2);
+
+            missingParameters.append(". They should be present in web.xml in a <context-param> tag.");
+        }
+
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Parse request to fetch authorization code
         String authorizationCode = getAuthorizationCode(req);
-
-        Properties properties = new Properties();
-        properties.load(getServletContext().getResourceAsStream("/WEB-INF/auth.properties"));
 
         URI accessTokenURI = getURI(properties);
 
@@ -76,9 +132,9 @@ public class AuthServletCallback extends HttpServlet {
 
         HttpPost httpPost = new HttpPost(accessTokenURI);
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("client_id",      (String) properties.get("auth.client_id")));
-        nameValuePairs.add(new BasicNameValuePair("redirect_uri",   (String) properties.get("auth.redirect_uri")));
-        nameValuePairs.add(new BasicNameValuePair("client_secret",  (String) properties.get("auth.client_secret")));
+        nameValuePairs.add(new BasicNameValuePair("client_id",      (String) properties.get("auth0.client_id")));
+        nameValuePairs.add(new BasicNameValuePair("redirect_uri",   (String) properties.get("auth0.redirect_uri")));
+        nameValuePairs.add(new BasicNameValuePair("client_secret",  (String) properties.get("auth0.client_secret")));
         nameValuePairs.add(new BasicNameValuePair("code",           authorizationCode));
         nameValuePairs.add(new BasicNameValuePair("grant_type",     "authorization_code"));
         nameValuePairs.add(new BasicNameValuePair("scope",          "openid"));
@@ -100,6 +156,6 @@ public class AuthServletCallback extends HttpServlet {
         parseTokensAndSaveToSession(tokensToParse, req.getSession());
 
         // Redirect user to home
-        resp.sendRedirect("/hello");
+        resp.sendRedirect((String) properties.get("auth0.redirect_after"));
     }
 }

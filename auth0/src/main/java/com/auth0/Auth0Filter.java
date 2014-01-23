@@ -1,17 +1,12 @@
-package com.auth0.example;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+package com.auth0;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
-
-public class AuthFilter implements Filter {
+public class Auth0Filter implements Filter {
 
 
     @Override
@@ -36,7 +31,7 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        next.doFilter(new AuthRequestWrapper(idToken, request), response);
+        next.doFilter(new Auth0RequestWrapper(idToken, request), response);
     }
 
     @Override
