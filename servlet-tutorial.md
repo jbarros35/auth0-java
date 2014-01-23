@@ -13,37 +13,52 @@ mvn archetype:generate -DgroupId=com.acme \
 
 ```
 
+### Maven Dependency
+
+Let's start by adding the Auth0-servlet artifact to the project `pom.xml` file.
+
+> Note: if you are not using Maven you can download the auth0-servlet.jar from the downloads section.
+
 ### Authentication
 
-First, let's create a [Filter](http://docs.oracle.com/javaee/6/api/javax/servlet/Filter.html) that will work as an interceptor or middleware. There, we will handle the incoming request before passing it to the servlets you want to restrict access.
+First, let's start configuring the `web.xml` found in your Web Application. We will start by adding Auth0 configuration parameters:
 
-Let's name it `AuthFilter` as it will handle **Authentication** aspects. Its doFilter method will look like this:
+```xml
+<web-app
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+        version="2.5">
+        
+    ...
+    
+    <!-- Auth0 Configuration -->
+    <context-param>
+        <param-name>auth0.client_id</param-name>
+        <param-value>YOUR_CLIENT_ID</param-value>
+    </context-param>
 
-```java
-@Override
-public void doFilter(ServletRequest req, ServletResponse response,
-                     FilterChain next) throws IOException, ServletException {
-    HttpServletRequest request = (HttpServletRequest) req;
+    <context-param>
+        <param-name>auth0.client_secret</param-name>
+        <param-value>YOUR_CLIENT_SECRET</param-value>
+    </context-param>
 
-    HttpSession session = ((HttpServletRequest) req).getSession();
-    String idToken = (String) session.getAttribute("idToken");
-    Object accessToken = session.getAttribute("accessToken");
+    <context-param>
+        <param-name>auth0.redirect_uri</param-name>
+        <param-value>YOUR_REDIRECT_URI</param-value>
+    </context-param>
 
-    // Reject if not accessToken or idToken are found
-    if (accessToken == null || idToken == null) {
-        HttpServletResponse resp = (HttpServletResponse) response;
-        resp.reset();
-        resp.getWriter().println("Error: You must be logged in to access this page");
-        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        return;
-    }
+    <context-param>
+        <param-name>auth0.domain</param-name>
+        <param-value>your-domain.auth0.com</param-value>
+    </context-param>
 
-    next.doFilter(new AuthRequestWrapper(idToken, request), response);
-}
-
+    <context-param>
+        <param-name>auth0.redirect_after</param-name>
+        <param-value>/path/in/your/app</param-value>
+    </context-param>
+</web-app>
 ```
-
-When a request enters the filter, the following will happen:
 
 * Send a HTTP 403 Forbidden Status code if the user is not logged in. This can be changed to redirect the user to a given URL (for instance a JSP that contains an Auth0 Widget).
 * Prepare a [Principal](http://docs.oracle.com/javase/6/docs/api/java/security/Principal.html) instance that will contain your Auth0 user data. You can access that later from your Servlet class by calling the `getUserPrincipal` method. That class can be extended to include other Auth0 data such as email and given name.
