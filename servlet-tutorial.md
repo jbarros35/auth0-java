@@ -134,9 +134,9 @@ Last but not least, one more Servlet is needed to handle the login page. We are 
 
 Point your browser to `/login` and you will be seeing that login page.
 
-### Going Beyond
+### Extensibility points
 
-On the first part, we explained how to get running up and fast with Auth0 in your app. But, probably, you need some degree of customization over any of the authentication parts. We will see how to customize it to better suit your needs.
+On the first part, we explained how to get running up and fast with Auth0 in your app. But, probably, you needed some degree of customization over any of the involved parts. We will see how to customize it to better suit your needs.
 
 In order to handle the callback call from Auth0, you will need to have a Servlet that handles the request.
 
