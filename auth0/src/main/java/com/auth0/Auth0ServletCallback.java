@@ -27,14 +27,27 @@ public class Auth0ServletCallback extends HttpServlet {
 
     private Properties properties = new Properties();
 
-    private void parseTokensAndSaveToSession(String body, HttpSession session) throws IOException {
+    private Tokens parseTokens(String body) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
+
         Map<String, String> jsonAsMap = mapper.readValue(body, Map.class);
         String accessToken = jsonAsMap.get("access_token");
         String idToken = jsonAsMap.get("id_token");
 
-        session.setAttribute("accessToken", accessToken);
-        session.setAttribute("idToken", idToken);
+        return new Tokens(idToken, accessToken);
+    }
+
+    protected void saveTokens(HttpServletRequest req, HttpServletResponse resp, Tokens tokens) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+
+        // Save tokens on a persistent session
+        session.setAttribute("accessToken", tokens.getAccessToken());
+        session.setAttribute("idToken", tokens.getIdToken());
+    }
+
+    protected void onSuccess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // Redirect user to home
+        resp.sendRedirect((String) properties.get("auth0.redirect_after"));
     }
 
     private URI getURI(Properties properties) {
@@ -152,10 +165,11 @@ public class Auth0ServletCallback extends HttpServlet {
             response.close();
         }
 
-        // Parse and obtain both access token and id token and save them in a persistent session
-        parseTokensAndSaveToSession(tokensToParse, req.getSession());
+        // Parse and obtain both access token and id token
+        Tokens tokens = parseTokens(tokensToParse);
 
-        // Redirect user to home
-        resp.sendRedirect((String) properties.get("auth0.redirect_after"));
+        saveTokens(req, resp, tokens);
+
+        onSuccess(req, resp);
     }
 }

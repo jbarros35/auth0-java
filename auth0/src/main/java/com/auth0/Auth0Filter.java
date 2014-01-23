@@ -8,31 +8,44 @@ import java.io.IOException;
 
 public class Auth0Filter implements Filter {
 
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse response,
-                         FilterChain next) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) req;
-
+    protected Tokens loadTokens(ServletRequest req, ServletResponse resp) {
         HttpSession session = ((HttpServletRequest) req).getSession();
-        String idToken = (String) session.getAttribute("idToken");
-        Object accessToken = session.getAttribute("accessToken");
+        return new Tokens((String) session.getAttribute("idToken"),
+                (String) session.getAttribute("accessToken"));
+    }
+
+    private void onSuccess(ServletRequest req, ServletResponse resp, FilterChain next, Tokens tokens) throws IOException, ServletException {
+        Auth0RequestWrapper auth0RequestWrapper = new Auth0RequestWrapper(tokens, (HttpServletRequest) req);
+        next.doFilter(auth0RequestWrapper, resp);
+    }
+
+    protected void onReject(ServletRequest req, ServletResponse response, FilterChain next) throws IOException {
+        HttpServletResponse resp = (HttpServletResponse) response;
+        resp.reset();
+        resp.getWriter().println("Error: You must be logged in to access this page");
+        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    }
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse resp,
+                         FilterChain next) throws IOException, ServletException {
+
+        Tokens tokens = loadTokens(req, resp);
 
         // Reject if not accessToken or idToken are found
-        if (accessToken == null || idToken == null) {
-            HttpServletResponse resp = (HttpServletResponse) response;
-            resp.reset();
-            resp.getWriter().println("Error: You must be logged in to access this page");
-            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        if (tokens.getAccessToken() == null || tokens.getIdToken() == null) {
+            onReject(req, resp, next);
             return;
         }
 
-        next.doFilter(new Auth0RequestWrapper(idToken, request), response);
+        onSuccess(req, resp, next, tokens);
     }
+
+
 
     @Override
     public void destroy() {
