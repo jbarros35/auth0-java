@@ -6,7 +6,6 @@ You can use  [Auth0](https://www.auth0.com) to add username/password authenticat
 
 These resources will help you implement server-side API authentication with Java using [Auth0](https://www.auth0.com):
 
- * [Adding Auth0 to existing Servlet App](https://github.com/auth0/auth0-java/blob/master/servlet-tutorial.md)
  * [Servlet example](https://github.com/auth0/auth0-java/tree/master/servlet-with-auth0)
 
 ---
