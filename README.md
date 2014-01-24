@@ -45,7 +45,7 @@ First, let's start configuring the `web.xml` found in your Web Application:
   <!-- Servlets -->
     ...
     <servlet>
-        <servlet-name>Hello</servlet-name>
+        <servlet-name>Protected</servlet-name>
         <servlet-class>com.auth0.example.HelloServlet</servlet-class>
     </servlet>
     <servlet>
@@ -53,7 +53,7 @@ First, let's start configuring the `web.xml` found in your Web Application:
         <servlet-class>com.auth0.Auth0ServletCallback</servlet-class>
         <init-param>
             <param-name>auth0.redirect_on_success</param-name>
-            <param-value>/hello</param-value>
+            <param-value>/protected</param-value>
         </init-param>
         <init-param>
             <param-name>auth0.redirect_on_error</param-name>
@@ -68,8 +68,8 @@ First, let's start configuring the `web.xml` found in your Web Application:
     <!-- Servlet Mappings -->
     ...
     <servlet-mapping>
-        <servlet-name>Hello</servlet-name>
-        <url-pattern>/hello/*</url-pattern>
+        <servlet-name>Protected</servlet-name>
+        <url-pattern>/protected/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -96,7 +96,7 @@ First, let's start configuring the `web.xml` found in your Web Application:
     </filter>
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
-        <url-pattern>/hello/*</url-pattern>
+        <url-pattern>/protected/*</url-pattern>
     </filter-mapping>
 
     <!-- Auth0 Configuration -->
@@ -116,17 +116,12 @@ First, let's start configuring the `web.xml` found in your Web Application:
         <param-value>your-domain.auth0.com</param-value>
     </context-param>
 
-    <context-param>
-        <param-name>auth0.redirect_uri</param-name>
-        <param-value>http://localhost:8080/callback</param-value>
-    </context-param>
-
 </web-app>
 ```
 
 In the `Auth0ServletCallback` the data to popuplate principal will be persisted in session. As we will see later this can be customized.
 
-As configured previously, the user will be redirected to `/hello`. User-provided `HelloServlet`, which overrides `doGet` method, will be handling that case.
+As configured previously, the user will be redirected to `/protected`. User-provided `HelloServlet`, which overrides `doGet` method, will be handling that case.
 
 ### Login Page
 
