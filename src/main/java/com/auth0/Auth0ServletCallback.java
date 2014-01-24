@@ -103,10 +103,10 @@ public class Auth0ServletCallback extends HttpServlet {
             throw new IllegalArgumentException("auth0.redirect_on_success parameter needs to be defined");
         }
 
-        redirectOnFail = config.getInitParameter("auth0.redirect_on_fail");
+        redirectOnFail = config.getInitParameter("auth0.redirect_on_error");
 
         if (redirectOnFail == null) {
-            throw new IllegalArgumentException("auth0.redirect_on_fail parameter needs to be defined");
+            throw new IllegalArgumentException("auth0.redirect_on_error parameter needs to be defined");
         }
 
         Map<String, Boolean> requiredParametersChecklist = new HashMap<String, Boolean>();

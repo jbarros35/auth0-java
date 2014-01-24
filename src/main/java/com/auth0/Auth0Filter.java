@@ -13,10 +13,10 @@ public class Auth0Filter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        onFailRedirectTo = filterConfig.getInitParameter("onFailRedirectTo");
+        onFailRedirectTo = filterConfig.getInitParameter("auth0.redirect_on_authentication_error");
 
         if (onFailRedirectTo == null) {
-            throw new InvalidParameterException("onFailRedirectTo parameter of " + this.getClass().getName() + " cannot be null");
+            throw new InvalidParameterException("auth0.redirect_on_authentication_error parameter of " + this.getClass().getName() + " cannot be null");
         }
     }
 
