@@ -56,7 +56,7 @@ First, let's start configuring the `web.xml` found in your Web Application:
             <param-value>/hello</param-value>
         </init-param>
         <init-param>
-            <param-name>auth0.redirect_on_fail</param-name>
+            <param-name>auth0.redirect_on_error</param-name>
             <param-value>/login</param-value>
         </init-param>
     </servlet>
@@ -90,7 +90,7 @@ First, let's start configuring the `web.xml` found in your Web Application:
         <filter-name>AuthFilter</filter-name>
         <filter-class>com.auth0.Auth0Filter</filter-class>
         <init-param>
-            <param-name>onFailRedirectTo</param-name>
+            <param-name>auth0.redirect_on_authentication_error</param-name>
             <param-value>/login</param-value>
         </init-param>
     </filter>
@@ -118,7 +118,7 @@ First, let's start configuring the `web.xml` found in your Web Application:
 
     <context-param>
         <param-name>auth0.redirect_uri</param-name>
-        <param-value>http://localhost:8080/oauth2callback</param-value>
+        <param-value>http://localhost:8080/callback</param-value>
     </context-param>
 
 </web-app>
