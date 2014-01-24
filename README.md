@@ -167,8 +167,8 @@ In order to handle the callback call from Auth0, you will need to have a Servlet
 #### Auth0 Filter
 
 `Auth0 Filter` can be subclassed and the following `protected` methods meant to be overriden:
- * onSuccess
- * onReject: 
+ * onSuccess: What should be done when the user is authenticated.
+ * onReject: What should be done when the user is not authenticated.
  * loadTokens: You should override this method to provide a custom way of restoring both id and access tokens. By default, they are stored in the Session object but, for instance, they can be persisted in databases.
 
 Method signatures are as follows: 
