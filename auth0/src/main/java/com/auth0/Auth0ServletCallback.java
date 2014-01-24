@@ -12,6 +12,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,8 @@ import java.util.*;
 public class Auth0ServletCallback extends HttpServlet {
 
     private Properties properties = new Properties();
+    private String redirectOnSuccess;
+    private String redirectOnFail;
 
     private Tokens parseTokens(String body) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -47,7 +50,7 @@ public class Auth0ServletCallback extends HttpServlet {
 
     protected void onSuccess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Redirect user to home
-        resp.sendRedirect((String) properties.get("auth0.redirect_after"));
+        resp.sendRedirect(redirectOnSuccess);
     }
 
     private URI getURI(Properties properties) {
@@ -81,22 +84,36 @@ public class Auth0ServletCallback extends HttpServlet {
      * <dl>
      *     <dt>auth0.client_id</dd><dd>Application client id</dd>
      *     <dt>auth0.client_secret</dt><dd>Application client secret</dd>
-     *     <dt>auth0.redirect_uri</dt><dd>OAuth2 URI to redirect the user with Authorization Code.
-     *     In most cases, this will be the route to com.auth0.Auth0ServletCallback servlet (or your subclass of it).
-     *     For instance, if your servlet will be routed to /callback and you will be listening on
-     *     localhost port 8080 it should be http://localhost:8080/callback</dd>
      *     <dt>auth0.domain</dt><dd>Auth0 domain</dd>
+     * </dl>
+     *
+     * Auth0ServletCallback uses these ServletConfig parameters:
+     *
+     * <dl>
      *     <dt>auth0.redirect_after</dt><dd>Where to send the user after successful login.</dd>
      * </dl>
      */
     @Override
-    public void init() throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+
+        redirectOnSuccess = config.getInitParameter("auth0.redirect_on_success");
+
+        if (redirectOnSuccess == null) {
+            throw new IllegalArgumentException("auth0.redirect_on_success parameter needs to be defined");
+        }
+
+        redirectOnFail = config.getInitParameter("auth0.redirect_on_fail");
+
+        if (redirectOnFail == null) {
+            throw new IllegalArgumentException("auth0.redirect_on_fail parameter needs to be defined");
+        }
+
         Map<String, Boolean> requiredParametersChecklist = new HashMap<String, Boolean>();
         StringBuilder missingParameters = new StringBuilder();
         String [] requiredParametersName = {
-                "auth0.client_id", "auth0.client_secret", "auth0.redirect_uri",
-                "auth0.domain", "auth0.redirect_after"};
-
+                "auth0.client_id", "auth0.client_secret",
+                "auth0.domain"};
 
         for (String requiredParameterName : requiredParametersName) {
             requiredParametersChecklist.put(requiredParameterName, false);
@@ -124,7 +141,6 @@ public class Auth0ServletCallback extends HttpServlet {
             }
         }
 
-
         if (missingParameters.length() > 0) {
             // Removing last ", "
             missingParameters.setLength(missingParameters.length() - 2);
@@ -136,6 +152,14 @@ public class Auth0ServletCallback extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String error = req.getParameter("error");
+
+        if (error != null) {
+            resp.sendRedirect(req.getContextPath() + redirectOnFail + "?" + req.getQueryString());
+            return;
+        }
+
         // Parse request to fetch authorization code
         String authorizationCode = getAuthorizationCode(req);
 
@@ -146,11 +170,12 @@ public class Auth0ServletCallback extends HttpServlet {
         HttpPost httpPost = new HttpPost(accessTokenURI);
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("client_id",      (String) properties.get("auth0.client_id")));
-        nameValuePairs.add(new BasicNameValuePair("redirect_uri",   (String) properties.get("auth0.redirect_uri")));
         nameValuePairs.add(new BasicNameValuePair("client_secret",  (String) properties.get("auth0.client_secret")));
+
+        nameValuePairs.add(new BasicNameValuePair("redirect_uri",   req.getRequestURL().toString()));
         nameValuePairs.add(new BasicNameValuePair("code",           authorizationCode));
+
         nameValuePairs.add(new BasicNameValuePair("grant_type",     "authorization_code"));
-        nameValuePairs.add(new BasicNameValuePair("scope",          "openid"));
 
         httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         CloseableHttpResponse response = httpClient.execute(httpPost);

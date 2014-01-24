@@ -5,11 +5,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 
 public class Auth0Filter implements Filter {
 
+    private String onFailRedirectTo;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        onFailRedirectTo = filterConfig.getInitParameter("onFailRedirectTo");
+
+        if (onFailRedirectTo == null) {
+            throw new InvalidParameterException("onFailRedirectTo parameter of " + this.getClass().getName() + " cannot be null");
+        }
     }
 
     protected Tokens loadTokens(ServletRequest req, ServletResponse resp) {
@@ -18,16 +26,14 @@ public class Auth0Filter implements Filter {
                 (String) session.getAttribute("accessToken"));
     }
 
-    private void onSuccess(ServletRequest req, ServletResponse resp, FilterChain next, Tokens tokens) throws IOException, ServletException {
+    protected void onSuccess(ServletRequest req, ServletResponse resp, FilterChain next, Tokens tokens) throws IOException, ServletException {
         Auth0RequestWrapper auth0RequestWrapper = new Auth0RequestWrapper(tokens, (HttpServletRequest) req);
         next.doFilter(auth0RequestWrapper, resp);
     }
 
-    protected void onReject(ServletRequest req, ServletResponse response, FilterChain next) throws IOException {
+    protected void onReject(ServletRequest req, ServletResponse response, FilterChain next) throws IOException, ServletException {
         HttpServletResponse resp = (HttpServletResponse) response;
-        resp.reset();
-        resp.getWriter().println("Error: You must be logged in to access this page");
-        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        resp.sendRedirect(onFailRedirectTo);
     }
 
     @Override

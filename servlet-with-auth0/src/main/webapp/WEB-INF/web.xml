@@ -13,10 +13,18 @@
     <servlet>
         <servlet-name>RedirectCallback</servlet-name>
         <servlet-class>com.auth0.Auth0ServletCallback</servlet-class>
+        <init-param>
+            <param-name>auth0.redirect_on_success</param-name>
+            <param-value>/hello</param-value>
+        </init-param>
+        <init-param>
+            <param-name>auth0.redirect_on_fail</param-name>
+            <param-value>/login</param-value>
+        </init-param>
     </servlet>
     <servlet>
         <servlet-name>Login</servlet-name>
-        <servlet-class>com.auth0.Auth0LoginServlet</servlet-class>
+        <jsp-file>/login.jsp</jsp-file>
     </servlet>
 
     <!-- Servlet Mappings -->
@@ -34,13 +42,17 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RedirectCallback</servlet-name>
-        <url-pattern>/oauth2callback/*</url-pattern>
+        <url-pattern>/oauth2callback</url-pattern>
     </servlet-mapping>
 
     <!-- Filters -->
     <filter>
         <filter-name>AuthFilter</filter-name>
         <filter-class>com.auth0.Auth0Filter</filter-class>
+        <init-param>
+            <param-name>onFailRedirectTo</param-name>
+            <param-value>/login</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
@@ -59,19 +71,13 @@
     </context-param>
 
     <context-param>
-        <param-name>auth0.redirect_uri</param-name>
-        <param-value>http://localhost/your_redirect_uri</param-value>
-    </context-param>
-
-    <context-param>
         <param-name>auth0.domain</param-name>
         <param-value>your-domain.auth0.com</param-value>
     </context-param>
 
     <context-param>
-        <param-name>auth0.redirect_after</param-name>
-        <param-value>/home</param-value>
+        <param-name>auth0.redirect_uri</param-name>
+        <param-value>http://localhost:8080/oauth2callback</param-value>
     </context-param>
-
 
 </web-app>
