@@ -75,9 +75,4 @@
         <param-value>your-domain.auth0.com</param-value>
     </context-param>
 
-    <context-param>
-        <param-name>auth0.redirect_uri</param-name>
-        <param-value>http://localhost:8080/callback</param-value>
-    </context-param>
-
 </web-app>
