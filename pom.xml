@@ -4,10 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+      <groupId>org.sonatype.oss</groupId>
+      <artifactId>oss-parent</artifactId>
+      <version>7</version>
+    </parent>
+
     <groupId>com.auth0</groupId>
     <artifactId>auth0-servlet</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+
+    <name>Auth0 bindings for Java Servlets</name>
+
+    <description>Add Auth0 to your Servlet by using this module</description>
+
+    <url>http://www.auth0.com</url>
 
     <licenses>
       <license>
@@ -17,9 +29,22 @@
       </license>
     </licenses>
 
+    <developers>
+      <developer>
+        <name>Alberto Pose</name>
+        <id>pose</id>
+        <roles>
+          <role>Developer</role>
+        </roles>
+      </developer>
+    </developers>
+
     <scm>
-      <connection>scm:git:https://github.com/auth0/auth0-java.git</connection>
+      <url>https://github.com/auth0/auth0-java</url>
+      <developerConnection>scm:git:git@github.com:auth0/auth0-java.git</developerConnection>
+      <connection>scm:git:git@github.com:auth0/auth0-java.git</connection>
     </scm>
+
 
     <dependencies>
         <dependency>
