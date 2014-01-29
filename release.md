@@ -11,10 +11,12 @@ This brief guide will explain the necessary steps required to deploy to [Maven C
   ```
 3. Make sure you have Auth0's Java Private Key. Ask in the chat for it.
 4. Install **key** into your machine GPG by doing: 
+   
   ```
     gpg --import key
   ```
   You should be seen an output similar to this:
+  
   ```
     gpg: Total number processed: 1
     gpg:       secret keys read: 1
