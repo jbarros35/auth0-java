@@ -7,7 +7,7 @@ You can use  [Auth0](https://www.auth0.com) to add username/password authenticat
 * [Java tutorial](https://github.com/auth0/docs/tree/master/docs/java-tutorial.md)
  
 
-## Release Process (for Auth0 Devs)
+### Release Process (for Auth0 Dev Team)
 
 * [How to release a new version to Maven](https://github.com/auth0/auth0-java/blob/master/release.md)
 
