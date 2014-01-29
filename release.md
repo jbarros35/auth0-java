@@ -1,7 +1,5 @@
 This brief guide will explain the necessary steps required to deploy to [Maven Central](http://search.maven.org/).
 
-![I'd prefer to starve](http://www.m1key.me/blog_images/maven_for_food.jpg)
-
 ## Prerequisites
 1. Maven installed in you machine. If that's not the case you can do:
    ```
