@@ -153,12 +153,7 @@ public class Auth0ServletCallback extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String error = req.getParameter("error");
-
-        if (error != null) {
-            resp.sendRedirect(req.getContextPath() + redirectOnFail + "?" + req.getQueryString());
-            return;
-        }
+        validateRequest(req, resp);
 
         // Parse request to fetch authorization code
         String authorizationCode = getAuthorizationCode(req);
@@ -197,4 +192,23 @@ public class Auth0ServletCallback extends HttpServlet {
 
         onSuccess(req, resp);
     }
+
+    private void validateRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if (hasError(req) || !isValidState(req)) {
+            resp.sendRedirect(req.getContextPath() + redirectOnFail + "?" + req.getQueryString());
+        }
+    }
+
+    private boolean isValidState(HttpServletRequest req) {
+        return req.getParameter("state") != null && isValidState(req.getParameter("state"));
+    }
+
+    protected boolean isValidState(String state) {
+        return true;
+    }
+
+    private static boolean hasError(HttpServletRequest req) {
+        return req.getParameter("error") != null;
+    }
+
 }
