@@ -3,6 +3,7 @@ package com.auth0;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -155,6 +157,15 @@ public class Auth0ServletCallback extends HttpServlet {
 
         validateRequest(req, resp);
 
+        Tokens tokens = fetchTokens(req);
+
+        saveTokens(req, resp, tokens);
+
+        onSuccess(req, resp);
+    }
+
+    private Tokens fetchTokens(HttpServletRequest req) throws UnsupportedEncodingException, IOException,
+            ClientProtocolException {
         // Parse request to fetch authorization code
         String authorizationCode = getAuthorizationCode(req);
 
@@ -186,11 +197,7 @@ public class Auth0ServletCallback extends HttpServlet {
         }
 
         // Parse and obtain both access token and id token
-        Tokens tokens = parseTokens(tokensToParse);
-
-        saveTokens(req, resp, tokens);
-
-        onSuccess(req, resp);
+        return parseTokens(tokensToParse);
     }
 
     private void validateRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
