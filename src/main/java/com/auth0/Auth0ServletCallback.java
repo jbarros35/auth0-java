@@ -154,14 +154,11 @@ public class Auth0ServletCallback extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        validateRequest(req, resp);
-
-        Tokens tokens = fetchTokens(req);
-
-        saveTokens(req, resp, tokens);
-
-        onSuccess(req, resp);
+        if(isValidRequest(req, resp)) {
+            Tokens tokens = fetchTokens(req);
+            saveTokens(req, resp, tokens);
+            onSuccess(req, resp);
+        }
     }
 
     private Tokens fetchTokens(HttpServletRequest req) throws UnsupportedEncodingException, IOException,
@@ -200,10 +197,12 @@ public class Auth0ServletCallback extends HttpServlet {
         return parseTokens(tokensToParse);
     }
 
-    private void validateRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private boolean isValidRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (hasError(req) || !isValidState(req)) {
             resp.sendRedirect(req.getContextPath() + redirectOnFail + "?" + req.getQueryString());
+            return false;
         }
+        return true;
     }
 
     private boolean isValidState(HttpServletRequest req) {
