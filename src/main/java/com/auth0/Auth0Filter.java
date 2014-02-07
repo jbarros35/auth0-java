@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.security.InvalidParameterException;
 
 public class Auth0Filter implements Filter {
 
@@ -16,7 +15,7 @@ public class Auth0Filter implements Filter {
         onFailRedirectTo = filterConfig.getInitParameter("auth0.redirect_on_authentication_error");
 
         if (onFailRedirectTo == null) {
-            throw new InvalidParameterException("auth0.redirect_on_authentication_error parameter of " + this.getClass().getName() + " cannot be null");
+            throw new IllegalArgumentException("auth0.redirect_on_authentication_error parameter of " + this.getClass().getName() + " cannot be null");
         }
     }
 
@@ -51,11 +50,7 @@ public class Auth0Filter implements Filter {
         onSuccess(req, resp, next, tokens);
     }
 
-
-
     @Override
     public void destroy() {
     }
-
-
 }

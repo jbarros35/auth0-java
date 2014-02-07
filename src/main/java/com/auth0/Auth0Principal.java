@@ -14,13 +14,13 @@ public class Auth0Principal implements Principal {
 
     public Auth0Principal(String idToken) {
         if (idToken == null) {
-            throw new RuntimeException("idToken cannot be null");
+            throw new IllegalArgumentException("idToken cannot be null");
         }
 
         String[] split = idToken.split("\\.");
 
         if (split.length != 3) {
-            throw new RuntimeException("Split should have three parts");
+            throw new IllegalArgumentException("Split should have three parts");
         }
 
         String userInfoJson = new String(Base64.decodeBase64(split[1]));
@@ -28,7 +28,7 @@ public class Auth0Principal implements Principal {
         try {
             this.user = mapper.readValue(userInfoJson, Map.class);
         } catch (IOException e) {
-            throw new RuntimeException("Error parsing Id Token JSON");
+            throw new IllegalArgumentException("Error parsing Id Token JSON");
         }
     }
 

@@ -1,6 +1,7 @@
 package com.auth0;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
@@ -19,6 +20,21 @@ import org.junit.Test;
 public class Auth0ServletCallbackTest {
 
     @Test
+    public void localMustOverrideGlobalInitParams() {
+        /* Local */
+        final ServletConfig config = mock(ServletConfig.class);
+        when(config.getInitParameter(eq("auth0.foo"))).thenReturn("bar");
+
+        /* Global */
+        final ServletContext ctx = mock(ServletContext.class);
+        when(ctx.getInitParameter("auth0.foo")).thenReturn("baz");
+
+        when(config.getServletContext()).thenReturn(ctx);
+
+        assertEquals("bar", Auth0ServletCallback.readParameter("auth0.foo", config));
+    }
+
+    @Test
     public void readsParametersFromConfigOrContext() throws ServletException {
         final List<String> parameters = asList(
                 "auth0.redirect_on_success",
@@ -27,7 +43,7 @@ public class Auth0ServletCallbackTest {
                 "auth0.client_secret",
                 "auth0.domain");
         for(final String missing : parameters) {
-            final List<String> defined = new ArrayList<>(parameters);
+            final List<String> defined = new ArrayList<String>(parameters);
             defined.remove(missing);
             paramsDefinedInConfig(missing, defined);
             paramsDefinedInContext(missing, defined);

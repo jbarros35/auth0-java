@@ -3,7 +3,6 @@ package com.auth0;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -83,7 +81,7 @@ public class Auth0ServletCallback extends HttpServlet {
         return authorizationCode;
     }
 
-    private static String readParameter(String parameter, ServletConfig config) {
+    static String readParameter(String parameter, ServletConfig config) {
         String first = config.getInitParameter(parameter);
         if(hasValue(first)) {
             return first;
@@ -113,7 +111,8 @@ public class Auth0ServletCallback extends HttpServlet {
      * Auth0ServletCallback uses these ServletConfig parameters:
      *
      * <dl>
-     *     <dt>auth0.redirect_after</dt><dd>Where to send the user after successful login.</dd>
+     *     <dt>auth0.redirect_on_success</dt><dd>Where to send the user after successful login.</dd>
+     *     <dt>auth0.redirect_on_error</dt><dd>Where to send the user after failed login.</dd>
      * </dl>
      */
     @Override
@@ -138,8 +137,7 @@ public class Auth0ServletCallback extends HttpServlet {
         }
     }
 
-    private Tokens fetchTokens(HttpServletRequest req) throws UnsupportedEncodingException, IOException,
-            ClientProtocolException {
+    private Tokens fetchTokens(HttpServletRequest req) throws IOException {
         // Parse request to fetch authorization code
         String authorizationCode = getAuthorizationCode(req);
 
