@@ -34,7 +34,7 @@ This brief guide will explain the necessary steps required to deploy to [Maven C
 
 ## Building
 1. Make necessary changes and commit them. It's really important that no files are left staged.
-2. On the `auth0-java` root directory do `mvn release:prepare`
+2. On the `auth0-java` root directory do `mvn release:prepare -Darguments="-Dgpg.keyname=XXXXXXXX -Dgpg.passphrase=\"XXXXXXXX\""`
 3. After doing that do `mvn release:perform -Darguments="-Dgpg.keyname=XXXXXXXX -Dgpg.passphrase=\"XXXXXXXX\" -Psonatype-oss-release"`
 4. Then, go to [Sonatype OSS Staging section](https://oss.sonatype.org/index.html#stagingRepositories). Log in with your Sonatype user.
 5. Look for a repository named `comauth0` or similar. It should be at the end of the list. Click there and make sure that the artifacts that were built on your computer match those that appear on the list. If that's not the case you will need to erase the artifacts and do the deploy again.
