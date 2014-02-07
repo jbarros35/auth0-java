@@ -39,6 +39,8 @@ This brief guide will explain the necessary steps required to deploy to [Maven C
 4. Then, go to [Sonatype OSS Staging section](https://oss.sonatype.org/index.html#stagingRepositories). Log in with your Sonatype user.
 5. Look for a repository named `comauth0` or similar. It should be at the end of the list. Click there and make sure that the artifacts that were built on your computer match those that appear on the list. If that's not the case you will need to erase the artifacts and do the deploy again.
 6. Click on that repository and click on the `Close` option. After doing that, wait a couple of seconds till it verifies the artifacts. If everything is ok click on the `Promote` options and in a couple of minutes it should be reaching Maven Central (you will be receiving emails with updates to the mailing account associated with Sonatype site). In case it fails, you will need to repeat th procedure until meeting all the repository requirements.
+7. Make sure to add the release, javadoc and source jar (and their .asc counterparts) to Github. It should be something similar to https://github.com/auth0/auth0-java/releases/tag/binary-1.0.
+8. Update auth0-docs section on Java to match the newly released version.
 
 ## Reverting changes if release:prepare worked but release:perform failed
 1. Remove local tag `git tag -d auth0-servlet-VERSION.MINOR`
@@ -54,6 +56,3 @@ If everything worked you should be able to run the example without a local copy:
 2. Go to the `sample` directory inside your `auth0-java` root directory.
 3. Execute `mvn clean install`. 
 4. If it worked and downloaded the dependencies you are set. If not, you may need to wait Maven Central to refresh (it can take up to 2 hours). Check your email for anything related with Sonatype in case something failed.
-
-## Last but not least
-Make sure to add the release, javadoc and source jar (and their .asc counterparts) to Github. It should be something similar to https://github.com/auth0/auth0-java/releases/tag/binary-1.0.
