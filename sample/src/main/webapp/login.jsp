@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -44,7 +43,8 @@
 
     </script>
     <% if ( request.getParameter("error") != null ) { %>
-        <span style="color: red;"><c:out value="${param.error}" /> </span>
+        <%-- TODO Escape and encode ${param.error} properly. It can be done using jstl c:out. --%>
+        <span style="color: red;">${param.error}</span>
     <% } %>
     <button onclick="widget.signin()">Login</button>
   </body>
