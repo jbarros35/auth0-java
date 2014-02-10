@@ -25,9 +25,6 @@ public class Tokens {
     }
 
     public Tokens(String idToken, String accessToken) {
-        if (idToken == null || accessToken == null) {
-            throw new IllegalArgumentException("Neither idToken nor accessToken can be null");
-        }
         this.idToken = idToken;
         this.accessToken = accessToken;
     }
