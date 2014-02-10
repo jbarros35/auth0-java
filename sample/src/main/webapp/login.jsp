@@ -46,6 +46,6 @@
         <%-- TODO Escape and encode ${param.error} properly. It can be done using jstl c:out. --%>
         <span style="color: red;">${param.error}</span>
     <% } %>
-    <button onclick="widget.signin()">Login</button>
+    <button onclick="widget.signin({state: 'foobar'})">Login</button>
   </body>
 </html>
