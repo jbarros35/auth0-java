@@ -20,7 +20,7 @@ In order to build and run the project you must execute:
 mvn clean install org.mortbay.jetty:jetty-maven-plugin:run
 ```
 
-Then, go to http://localhost:8080/login.
+Then, go to [http://localhost:8080/login](http://localhost:8080/login).
 
 Happy hacking!
 
