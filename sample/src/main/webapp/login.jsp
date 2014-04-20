@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Login</title>
-    <script src="https://d19p4zemcycm7a.cloudfront.net/w2/auth0-widget-2.4.0.min.js"></script>
+    <script src="https://cdn.auth0.com/w2/auth0-widget-2.4.0.min.js"></script>
   </head>
   <body>
     <script type="text/javascript">
