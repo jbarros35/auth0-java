@@ -28,7 +28,7 @@ This brief guide will explain the necessary steps required to deploy to [Maven C
 ## Before Building
 1. Make necessary changes on `auth0-java` project.
 2. On the `auth0-java` root directory do `mvn clean install`
-3. Go to the `sample` folder and modify the `pom.xml` to point to the new `auth0-java` version. The `auth0-java` version if 
+3. Go to the `sample` folder and modify the `pom.xml` to point to the new `auth0-java` version.
 4. Make sure that the example works with the new changes by running `mvn clean install org.mortbay.jetty:jetty-maven-plugin:run` and point your browser to http://localhost:8080/login.
 5. If the example works, commit and push the changes on the `sample` folder.
 
