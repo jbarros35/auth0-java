@@ -137,13 +137,41 @@ public class Auth0ServletCallback extends HttpServlet {
         }
     }
 
+    /**
+     * Override this method to specify a different HttpClient. For instance, if you
+     * want this to run behind a proxy you should override this class and implement:
+     *
+     * <code>
+     * protected CloseableHttpClient createHttpClient() {
+     *      CloseableHttpClient httpClient;
+     +      if (useSystemDefaultProxy) {
+     +          SystemDefaultRoutePlanner routePlanner = new SystemDefaultRoutePlanner(
+     +                    ProxySelector.getDefault());
+     +          httpClient = HttpClients.custom()
+     +                    .setRoutePlanner(routePlanner)
+     +                    .build();
+     +      } else {
+     +          httpClient = HttpClients.createDefault();
+     +      }
+     +      return httpClient;
+     * }
+     * </code>
+     *
+     *
+     * @return CloseableHttpClient that will be used to perform http requests to Auth0.
+     */
+    protected CloseableHttpClient createHttpClient()
+    {
+        return HttpClients.createDefault();
+    }
+
     private Tokens fetchTokens(HttpServletRequest req) throws IOException {
         // Parse request to fetch authorization code
         String authorizationCode = getAuthorizationCode(req);
 
         URI accessTokenURI = getURI(properties);
 
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpClient httpClient = createHttpClient();
 
         HttpPost httpPost = new HttpPost(accessTokenURI);
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
