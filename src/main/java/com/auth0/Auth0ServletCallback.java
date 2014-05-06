@@ -128,6 +128,20 @@ public class Auth0ServletCallback extends HttpServlet {
         }
     }
 
+    /**
+     * Override this method to specify a different NonceStorage:
+     *
+     * <code>
+     *     protected NonceStorage getNonceStorage(HttpServletRequest request) {
+     *         return MyNonceStorageImpl(request);
+     *     }
+     * </code>
+     */
+
+    protected NonceStorage getNonceStorage(HttpServletRequest request) {
+        return new RequestNonceStorage(request);
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(isValidRequest(req, resp)) {
@@ -209,11 +223,7 @@ public class Auth0ServletCallback extends HttpServlet {
     }
 
     private boolean isValidState(HttpServletRequest req) {
-        return req.getParameter("state") != null && isValidState(req.getParameter("state"));
-    }
-
-    protected boolean isValidState(String state) {
-        return true;
+        return req.getParameter("state").equals(getNonceStorage(req).getState());
     }
 
     private static boolean hasError(HttpServletRequest req) {
