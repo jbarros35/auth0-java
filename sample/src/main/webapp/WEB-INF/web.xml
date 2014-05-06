@@ -24,7 +24,7 @@
     </servlet>
     <servlet>
         <servlet-name>Login</servlet-name>
-        <jsp-file>/login.jsp</jsp-file>
+        <servlet-class>com.auth0.example.LoginServlet</servlet-class>
     </servlet>
 
     <!-- Servlet Mappings -->
