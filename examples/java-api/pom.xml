@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.auth0</groupId>
 	<artifactId>javaapi-sample</artifactId>
@@ -47,6 +47,11 @@
 				<configuration>
 					<containerId>tomcat7x</containerId>
 					<containerUrl>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.16/bin/apache-tomcat-7.0.16.zip</containerUrl>
+          <configuration>
+            <properties>
+              <cargo.servlet.port>3001</cargo.servlet.port>
+            </properties>
+          </configuration>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -79,6 +84,11 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+     <dependency>
+      <groupId>org.ebaysf.web</groupId>
+      <artifactId>cors-filter</artifactId>
+      <version>1.0.0</version>
+    </dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
