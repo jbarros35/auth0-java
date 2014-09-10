@@ -1,98 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-      <groupId>org.sonatype.oss</groupId>
-      <artifactId>oss-parent</artifactId>
-      <version>9</version>
-    </parent>
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>9</version>
+	</parent>
 
-    <groupId>com.auth0</groupId>
-    <artifactId>auth0-servlet</artifactId>
-    <version>1.5-SNAPSHOT</version>
-    <packaging>jar</packaging>
+	<groupId>com.auth0</groupId>
+	<artifactId>auth0-servlet</artifactId>
+	<version>1.5-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
-    <name>Auth0 bindings for Java Servlets</name>
-    <description>Add Auth0 to your Servlet by using this module</description>
-    <url>http://www.auth0.com</url>
+	<name>Auth0 bindings for Java Servlets</name>
+	<description>Add Auth0 to your Servlet by using this module</description>
+	<url>http://www.auth0.com</url>
 
-    <properties>
-        <java.version>1.6</java.version>
-    </properties>
+	<properties>
+		<java.version>1.6</java.version>
+	</properties>
 
-    <licenses>
-      <license>
-        <name>The MIT License</name>
-        <url>http://www.opensource.org/licenses/mit-license.php</url>
-        <distribution>repo</distribution>
-      </license>
-    </licenses>
+	<licenses>
+		<license>
+			<name>The MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
-    <developers>
-      <developer>
-        <name>Alberto Pose</name>
-        <id>pose</id>
-        <roles>
-          <role>Developer</role>
-        </roles>
-      </developer>
-    </developers>
+	<developers>
+		<developer>
+			<name>Alberto Pose</name>
+			<id>pose</id>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Martin Gontovnikas</name>
+			<id>mgonto</id>
+			<roles>
+				<role>Developer Advocate</role>
+			</roles>
+		</developer>
+	</developers>
 
-    <scm>
-      <url>https://github.com/auth0/auth0-java</url>
-      <developerConnection>scm:git:git@github.com:auth0/auth0-java.git</developerConnection>
-      <connection>scm:git:git@github.com:auth0/auth0-java.git</connection>
-    </scm>
+	<scm>
+		<url>https://github.com/auth0/auth0-java</url>
+		<developerConnection>scm:git:git@github.com:auth0/auth0-java.git</developerConnection>
+		<connection>scm:git:git@github.com:auth0/auth0-java.git</connection>
+	</scm>
 
-    <dependencies>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.3.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.4</version>
-        </dependency>
+	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.9.5</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+		<dependency>
+			<groupId>us.monoid.web</groupId>
+			<artifactId>resty</artifactId>
+			<version>0.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.9.5</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
