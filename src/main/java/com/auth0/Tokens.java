@@ -1,5 +1,8 @@
 package com.auth0;
 
+import us.monoid.json.JSONException;
+import us.monoid.json.JSONObject;
+
 public class Tokens {
     private String idToken;
     private String accessToken;
@@ -28,6 +31,10 @@ public class Tokens {
         this.idToken = idToken;
         this.accessToken = accessToken;
     }
+    
+    public Tokens(JSONObject json) throws JSONException {
+    	this((String) json.get("id_token"), (String) json.get("access_token"));
+    }
 
     public String getAccessToken() {
         return accessToken;
@@ -36,4 +43,8 @@ public class Tokens {
     public String getIdToken() {
         return idToken;
     }
+
+	public boolean exist() {
+		return getIdToken() != null && getAccessToken() != null;
+	}
 }

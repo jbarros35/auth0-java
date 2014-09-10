@@ -1,12 +1,13 @@
 package com.auth0.example;
 
-import com.auth0.Auth0Principal;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import com.auth0.Auth0User;
 
 public class HelloServlet extends HttpServlet
 {
@@ -22,10 +23,13 @@ public class HelloServlet extends HttpServlet
                 "    <title>Login</title>\n" +
                 "  </head>\n" +
                 "  <body>\n");
+        
+        Auth0User user = Auth0User.get(request);
 
         resp.getWriter().println("<h1>Welcome</h1>");
+        resp.getWriter().println("<img src=\"" + user.getPicture() + "\" />");
         resp.getWriter().println("<p>Hello " + request.getUserPrincipal().getName() + "!</p>");
-        resp.getWriter().println("<p>Your email is: " + ((Auth0Principal) request.getUserPrincipal()).getMail() + "</p>");
+        resp.getWriter().println("<p>Your nickname is: " + user.getNickname() + "</p>");
         resp.getWriter().println("  </body>\n" +
                 "</html>");
     }

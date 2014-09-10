@@ -7,21 +7,22 @@ import java.security.Principal;
 public class Auth0RequestWrapper extends HttpServletRequestWrapper {
     String idToken;
     HttpServletRequest realRequest;
+	private Auth0User user;
 
-    public Auth0RequestWrapper(Tokens tokens, HttpServletRequest request) {
+    public Auth0RequestWrapper(Auth0User user, HttpServletRequest request) {
         super(request);
+		this.user = user;
 
-        this.idToken = tokens.getIdToken();
         this.realRequest = request;
     }
 
     @Override
     public Principal getUserPrincipal() {
-        if (this.idToken == null) {
+        if (this.user == null) {
             return realRequest.getUserPrincipal();
         }
 
-        return new Auth0Principal(this.idToken);
+        return user;
     }
 
 }
