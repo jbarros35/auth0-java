@@ -8,7 +8,7 @@ You can use  [Auth0](https://www.auth0.com) to add username/password authenticat
 
 [Please read this tutorial](https://docs.auth0.com/server-platforms/java) to learn how to use this SDK. It's exremely simple
 
-## Extensibility points
+### Extensibility points
 ### Auth0 Servlet Callback
 
 #### protected void onSuccess(HttpServletRequest req, HttpServletResponse resp)
