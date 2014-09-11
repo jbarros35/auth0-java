@@ -4,8 +4,43 @@
 
 You can use  [Auth0](https://www.auth0.com) to add username/password authentication, support for enterprise identity like Active Directory or SAML and also for social identities like Google, Facebook or Salesforce among others to your web, API and mobile native apps. 
 
-* [Java tutorial](https://github.com/auth0/docs/tree/master/docs/java-tutorial.md)
- 
+## Learn how to use it
+
+[Please read this tutorial](https://docs.auth0.com/server-platforms/java) to learn how to use this SDK. It's exremely simple
+
+## Extensibility points
+### Auth0 Servlet Callback
+
+#### protected void onSuccess(HttpServletRequest req, HttpServletResponse resp)
+
+Here you can configure what to do after successful authentication. By default, it redirects to the URL configured in the `web.xml`
+
+####	protected void onFailure(HttpServletRequest req, HttpServletResponse resp, Exception ex) 
+
+Here you can configure what to do after failure authentication. By default, it redirects to the URL configured in the `web.xml`
+			
+#### protected void store(Tokens tokens, Auth0User user, HttpServletRequest req
+
+Here you can configure where to store the Tokens and the User. By default, they're stored in the `Session` in the `tokens` and `user` fields
+
+### Auth0 Filter
+
+#### protected Tokens loadTokens(ServletRequest req, ServletResponse resp)
+
+You can specify where to get the tokens from. If you changed where they're saved in the Callback, then you should change it here. Now, they're saved in the `tokens` field of the `Session`
+
+#### protected Auth0User loadUser(ServletRequest req)
+
+You can specify where to get the User from. If you changed where they're saved in the Callback, then you should change it here. Now, they're saved in the `user` field of the `Session`
+
+#### protected void onSuccess(ServletRequest req, ServletResponse resp, FilterChain next, Auth0User user)
+
+By default, on success we wrap the `Request` with the `Auth0Request` so that we change the `UserPrincipal` to be a `Auth0User`. You can of course change that here.
+
+#### protected void onReject(ServletRequest req, ServletResponse resp, FilterChain next, Auth0User user)
+
+By default, on we redirect to the URL configured in the `web.xml`. You can override this and change that.
+
 
 ### Release Process
 
