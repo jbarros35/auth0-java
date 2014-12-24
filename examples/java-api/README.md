@@ -11,9 +11,9 @@ You also need to set the ClientSecret and ClientId for your Auth0 app as envirom
 For that, you can set them and run the example with the following command
 
 ````bash
-AUTH0_CLIENT_ID=myClientId AUTH0_CLIENT_SECRET=myClientSecret mvn clean install cargo:run
+AUTH0_CLIENT_ID=myClientId AUTH0_CLIENT_SECRET=myClientSecret mvn clean install jetty:run -Djetty.port=3001
 ````
 
-Try calling [http://localhost:8080/javaapi-sample/ping](http://localhost:8080/javaapi-sample/ping)
+Try calling [http://localhost:3001/ping](http://localhost:3001/ping)
 
-You can then try to do a GET to [http://localhost:8080/javaapi-sample/secured/ping](http://localhost:8080/javaapi-sample/secured/ping) which will throw an error if you don't send the JWT in the header.
+You can then try to do a GET to [http://localhost:3001/secured/ping](http://localhost:3001/secured/ping) which will throw an error if you don't send the JWT in the header.
