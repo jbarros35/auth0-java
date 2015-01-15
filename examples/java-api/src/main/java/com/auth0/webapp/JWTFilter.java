@@ -11,10 +11,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.codec.binary.Base64;
 import com.auth0.jwt.JWTVerifier;
 
 @WebFilter(filterName= "jwt-filter", urlPatterns = { "/secured/*" })
@@ -23,8 +21,7 @@ public class JWTFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        jwtVerifier = new JWTVerifier(
-          new Base64(true).decodeBase64(System.getenv("AUTH0_CLIENT_SECRET")),
+        jwtVerifier = new JWTVerifier(System.getenv("AUTH0_CLIENT_SECRET"),
           System.getenv("AUTH0_CLIENT_ID"));
     }
 
