@@ -49,8 +49,6 @@ If you have found a bug or if you have a feature request, please report them at 
 
 * [How to release a new version to Maven](https://github.com/auth0/auth0-java/blob/master/release.md)
 
----
-
 ## What is Auth0?
 
 Auth0 helps you to:
