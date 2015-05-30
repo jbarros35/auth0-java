@@ -177,8 +177,9 @@ public class Auth0ServletCallback extends HttpServlet {
 	}
 
 	private boolean isValidState(HttpServletRequest req) {
-		return req.getParameter("state")
-				.equals(getNonceStorage(req).getState());
+		final String nonceStorage = getNonceStorage(req).getState();
+		return nonceStorage != null ? req.getParameter("state")
+				.equals(getNonceStorage(req).getState()) : true;
 	}
 
 	private static boolean hasError(HttpServletRequest req) {
